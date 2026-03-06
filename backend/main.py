@@ -238,9 +238,9 @@ RESOURCES_DATA = [
 
 # ==================== API ENDPOINTS ====================
 
-@app.get("/", tags=["Root"])
-async def root():
-    """API health check and welcome message"""
+@app.get("/api", tags=["Root"])
+async def api_info():
+    """API health check and info"""
     return {
         "message": "Welcome to Smart Campus Assistant API",
         "version": "1.0.0",
