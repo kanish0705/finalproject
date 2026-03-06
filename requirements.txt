@@ -1,5 +1,5 @@
 # Smart Campus Assistant
-# Simplified Python Dependencies
+# Python Dependencies
 
 # FastAPI framework
 fastapi==0.109.0

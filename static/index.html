@@ -1385,6 +1385,7 @@
                             <span class="announcement-date"><i class="far fa-calendar-alt"></i> ${formatDate(ann.date)}</span>
                         </div>
                         <p class="announcement-description">${ann.description}</p>
+                        ${ann.image_url ? `<div class="announcement-image"><img src="${ann.image_url}" alt="${ann.title}" style="max-width: 100%; border-radius: 8px; margin-top: 15px;"></div>` : ''}
                     </div>
                 `).join('');
 
@@ -1425,20 +1426,35 @@
                 return;
             }
 
-            container.innerHTML = resources.map(res => `
-                <div class="resource-card">
-                    <span class="resource-type ${res.type}">
-                        <i class="fas fa-${res.type === 'pdf' ? 'file-pdf' : res.type === 'link' ? 'link' : 'sticky-note'}"></i>
-                        ${res.type}
-                    </span>
-                    <h4 class="resource-title">${res.title}</h4>
-                    <p class="resource-subject"><i class="fas fa-book"></i> ${res.subject}</p>
-                    <p class="resource-description">${res.description}</p>
-                    <a href="${res.url}" target="_blank" class="resource-link">
-                        <i class="fas fa-external-link-alt"></i> Access Resource
-                    </a>
-                </div>
-            `).join('');
+            container.innerHTML = resources.map(res => {
+                const typeIcon = {
+                    'pdf': 'file-pdf',
+                    'ppt': 'file-powerpoint',
+                    'doc': 'file-word',
+                    'excel': 'file-excel',
+                    'link': 'link',
+                    'notes': 'sticky-note',
+                    'file': 'file'
+                }[res.type] || 'file';
+                
+                const isDownload = res.url && res.url.startsWith('/uploads/');
+                
+                return `
+                    <div class="resource-card">
+                        <span class="resource-type ${res.type}">
+                            <i class="fas fa-${typeIcon}"></i>
+                            ${res.type.toUpperCase()}
+                        </span>
+                        <h4 class="resource-title">${res.title}</h4>
+                        <p class="resource-subject"><i class="fas fa-book"></i> ${res.subject}</p>
+                        <p class="resource-description">${res.description}</p>
+                        ${res.file_name ? `<p style="font-size: 0.75rem; color: var(--gray); margin-bottom: 10px;"><i class="fas fa-file"></i> ${res.file_name}</p>` : ''}
+                        <a href="${res.url}" target="_blank" ${isDownload ? 'download' : ''} class="resource-link">
+                            <i class="fas fa-${isDownload ? 'download' : 'external-link-alt'}"></i> ${isDownload ? 'Download' : 'Access'} Resource
+                        </a>
+                    </div>
+                `;
+            }).join('');
         }
 
         function filterResources() {
